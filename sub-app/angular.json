@@ -15,8 +15,12 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "ngx-build-plus:browser",
+          "builder": "@angular-builders/custom-webpack:browser",
           "options": {
+            "customWebpackConfig": {
+              "path": "./webpack.externals.js",
+              "replaceDuplicatePlugins": true
+           },
             "outputPath": "dist/sub-app",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -29,16 +33,6 @@
             ],
             "styles": [
               "src/styles.scss"
-            ],
-            "scripts": [
-              "node_modules/rxjs/bundles/rxjs.umd.js",
-              "node_modules/@angular/core/bundles/core.umd.js",
-              "node_modules/@angular/common/bundles/common.umd.js",
-              "node_modules/@angular/common/bundles/common-http.umd.js",
-              "node_modules/@angular/compiler/bundles/compiler.umd.js",
-              "node_modules/@angular/elements/bundles/elements.umd.js",
-              "node_modules/@angular/platform-browser/bundles/platform-browser.umd.js",
-              "node_modules/@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.js"
             ]
           },
           "configurations": {
@@ -69,9 +63,13 @@
           }
         },
         "serve": {
-          "builder": "ngx-build-plus:dev-server",
+          "builder": "@angular-builders/custom-webpack:dev-server",
           "options": {
-            "browserTarget": "sub-app:build"
+            "browserTarget": "sub-app:build",
+            "customWebpackConfig": {
+              "path": "./webpack.externals.js",
+              "replaceDuplicatePlugins": true
+           }
           },
           "configurations": {
             "production": {
