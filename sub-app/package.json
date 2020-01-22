@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
+    "start": "npm run build && http-server ./dist/sub-app -p 8081",
+    "build": "ng build --output-hashing none",
     "build:once": "ng build --extra-webpack-config webpack.externals.js --prod --single-bundle --output-hashing none",
     "test": "ng test",
     "lint": "ng lint",
