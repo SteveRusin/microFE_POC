@@ -8,15 +8,15 @@ import { Component, OnInit } from '@angular/core';
 export class AppComponent implements OnInit {
   title = 'mediator-app';
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit() {
     const body = document.querySelector('body');
     const scriptsUrls = [
       'https://cdnjs.cloudflare.com/ajax/libs/zone.js/0.9.1/zone.min.js',
       'https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.2.10/custom-elements-es5-adapter.js',
-      'http://localhost:8081/main-es2015.js',
-      'http://localhost:8082/main-es2015.js',
+      // 'http://localhost:8081/sub-vendor.js',
+      'http://localhost:8081/sub-main.js',
     ];
 
     scriptsUrls.forEach(url => {

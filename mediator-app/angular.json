@@ -31,14 +31,6 @@
               "src/styles.scss"
             ],
             "scripts": [
-              "node_modules/rxjs/bundles/rxjs.umd.js",
-              "node_modules/@angular/core/bundles/core.umd.js",
-              "node_modules/@angular/common/bundles/common.umd.js",
-              "node_modules/@angular/common/bundles/common-http.umd.js",
-              "node_modules/@angular/compiler/bundles/compiler.umd.js",
-              "node_modules/@angular/elements/bundles/elements.umd.js",
-              "node_modules/@angular/platform-browser/bundles/platform-browser.umd.js",
-              "node_modules/@angular/platform-browser-dynamic/bundles/platform-browser-dynamic.umd.js",
               {
                 "input": "node_modules/document-register-element/build/document-register-element.js"
               },

@@ -1,19 +1,19 @@
 const webpack = require('webpack');
+const path = require('path');
 
 module.exports = {
-    "externals": {
-        "rxjs": "rxjs",
-        "@angular/core": "ng.core",
-        "@angular/common": "ng.common",
-        "@angular/common/http": "ng.common.http",
-        "@angular/platform-browser": "ng.platformBrowser",
-        "@angular/platform-browser-dynamic": "ng.platformBrowserDynamic",
-        "@angular/compiler": "ng.compiler",
-        "@angular/elements": "ng.elements",
-        "@ngrx/store": "ngrx.store",
-
-        // Uncomment and add to scripts in angular.json if needed
-        // "@angular/router": "ng.router",
-        // "@angular/forms": "ng.forms"
-    }
+  optimization: {
+    runtimeChunk: false,
+  },
+  output: {
+    path: path.join(__dirname, "./src/dll"),
+    filename: "[name].dll.js",
+    library: "[name]"
+  },
+  plugins: [
+    new webpack.DllReferencePlugin({
+      context: path.join(__dirname, './src/dll'),
+      manifest: path.resolve(__dirname, './src/dll/angular-manifest.json')
+    }),
+  ]
 }

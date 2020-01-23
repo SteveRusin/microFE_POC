@@ -3,10 +3,11 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "npm run build && http-server ./dist/sub-app -p 8081",
-    "build": "ng build --output-hashing none",
+    "start": "npm run build && http-server ./dist/sub-app -p 8081 ",
+    "build": "ng build --extra-webpack-config webpack.externals.js --output-hashing none",
     "build:once": "ng build --extra-webpack-config webpack.externals.js --prod --single-bundle --output-hashing none",
     "test": "ng test",
+    "watch": "nodemon --watch webpack.externals.js --exec \"npm run build\"",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "build:externals": "ng build --extra-webpack-config webpack.externals.js --prod --single-bundle",
@@ -24,7 +25,9 @@
     "@angular/platform-browser-dynamic": "~8.2.14",
     "@angular/router": "~8.2.14",
     "@ngrx/store": "^8.6.0",
+    "bundle-loader": "^0.5.6",
     "ngx-build-plus": "^9.0.2",
+    "nodemon": "^2.0.2",
     "rxjs": "~6.4.0",
     "shared-app21": "0.0.1",
     "tslib": "^1.10.0",
@@ -35,9 +38,9 @@
     "@angular/cli": "~8.3.23",
     "@angular/compiler-cli": "~8.2.14",
     "@angular/language-service": "~8.2.14",
-    "@types/node": "~8.9.4",
     "@types/jasmine": "~3.3.8",
     "@types/jasminewd2": "~2.0.3",
+    "@types/node": "~8.9.4",
     "codelyzer": "^5.0.0",
     "jasmine-core": "~3.4.0",
     "jasmine-spec-reporter": "~4.2.1",
@@ -49,6 +52,7 @@
     "protractor": "~5.4.0",
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",
-    "typescript": "~3.5.3"
+    "typescript": "~3.5.3",
+    "webpack-subresource-integrity": "^1.4.0"
   }
 }
