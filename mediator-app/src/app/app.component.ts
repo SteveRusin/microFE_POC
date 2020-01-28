@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-
+import { Component, OnInit, Compiler } from '@angular/core';
+declare var System: any;
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -8,7 +8,9 @@ import { Component, OnInit } from '@angular/core';
 export class AppComponent implements OnInit {
   title = 'mediator-app';
 
-  constructor() { }
+  constructor(
+    private compiler: Compiler,
+  ) { }
 
   ngOnInit() {
     const body = document.querySelector('body');
@@ -16,7 +18,7 @@ export class AppComponent implements OnInit {
       'https://cdnjs.cloudflare.com/ajax/libs/zone.js/0.9.1/zone.min.js',
       'https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.2.10/custom-elements-es5-adapter.js',
       // 'http://localhost:8081/sub-vendor.js',
-      'http://localhost:8081/sub-main.js',
+      // 'http://localhost:8081/sub-main.js',
     ];
 
     scriptsUrls.forEach(url => {
@@ -25,6 +27,18 @@ export class AppComponent implements OnInit {
 
       body.appendChild(script);
     })
+
+    this.load();
+  }
+
+  load() {
+    // System.map['subApp'] = "http://localhost:8081/sub-main.js";
+
+    System.import('http://localhost:8081/sub-main.js')
+      .then(module => {
+        this.compiler.compileModuleSync(module)
+      })
+
   }
 }
 

@@ -41,6 +41,10 @@
               {
                 "bundleName": "polyfill-webcomp",
                 "input": "node_modules/@webcomponents/webcomponentsjs/bundles/webcomponents-sd-ce-pf.js"
+              },
+              {
+                "bundleName": "SystemJs",
+                "input": "node_modules/systemjs/dist/system.js"
               }
             ]
           },
