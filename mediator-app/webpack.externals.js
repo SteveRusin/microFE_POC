@@ -5,6 +5,12 @@ module.exports = {
   externals: {
     System: 'System'
   },
+  output: {
+    libraryTarget: 'system',
+  },
+  optimization: {
+    runtimeChunk: true,
+  },
   module: {
     rules: [
       { parser: { system: false } }

@@ -1,5 +1,15 @@
 import { Component, OnInit, Compiler } from '@angular/core';
-declare var System: any;
+import * as AngularCore from '@angular/core';
+
+System.set("@angular/core", System.newModule(AngularCore))
+export interface System {
+  import: (...args: any) => any;
+  get: (id: any) => any;
+  set: (id: any, module: any) => any;
+  [key: string]: any;
+}
+
+declare var System: System;
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -33,10 +43,10 @@ export class AppComponent implements OnInit {
 
   load() {
     // System.map['subApp'] = "http://localhost:8081/sub-main.js";
-
-    System.import('http://localhost:8081/sub-main.js')
+    System.import('http://localhost:8081/sub-app.umd.js')
       .then(module => {
-        this.compiler.compileModuleSync(module)
+      console.log('TCL: AppComponent -> load -> module', module)
+       // this.compiler.compileModuleSync(module)
       })
 
   }
