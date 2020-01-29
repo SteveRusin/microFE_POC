@@ -5,14 +5,13 @@ const path = require('path');
 module.exports = {
   output: {
     filename: 'sub-[name].js',
-    // crossOriginLoading: 'anonymous',
-    // chunkFilename: '[name].bundle.js'
+    libraryTarget: 'system'
   },
-  optimization: {
+/*   optimization: {
     runtimeChunk: false,
     moduleIds: 'named',
     chunkIds: 'named',
-  },
+  }, */
   /*   optimization: {
       runtimeChunk: false,
       splitChunks: {

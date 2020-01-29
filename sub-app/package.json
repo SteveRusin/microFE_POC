@@ -1,17 +1,34 @@
 {
+  "$schema": "./node_modules/ng-packagr/package.schema.json",
   "name": "sub-app",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "npm run build && http-server ./dist/sub-app -p 8081 ",
+    "start": "npm run build && npm run serve",
+    "serve": " http-server ./dist/bundles -p 8081 --cors=http://localhost:8080/",
     "build": "ng build --extra-webpack-config webpack.externals.js --output-hashing none",
     "build:once": "ng build --extra-webpack-config webpack.externals.js --prod --single-bundle --output-hashing none",
     "test": "ng test",
-    "watch": "nodemon --watch webpack.externals.js --exec \"npm run build\"",
+    "watch": "nodemon --watch . -e ts,html,scss --exec \"npm run build:plugin\"",
     "lint": "ng lint",
     "e2e": "ng e2e",
+    "build:plugin": "ng build plugins --prod --modulePath=./app/app.module#SubAppModule --pluginName=sub-app --outputPath=./dist/bundles",
     "build:externals": "ng build --extra-webpack-config webpack.externals.js --prod --single-bundle",
     "build:sub-app:externals": "ng build --extra-webpack-config webpack.externals.js --prod --project sub-app --single-bundle"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "dist/*",
+      "src/main.ts"
+    ]
+  },
+  "ngPackage": {
+    "lib": {
+      "entryFile": "./src/main.ts"
+    },
+    "whitelistedNonPeerDependencies": [
+      "."
+    ]
   },
   "private": true,
   "dependencies": {
@@ -25,6 +42,7 @@
     "@angular/platform-browser-dynamic": "~8.2.14",
     "@angular/router": "~8.2.14",
     "@ngrx/store": "^8.6.0",
+    "@ngrx/store-devtools": "^8.6.0",
     "bundle-loader": "^0.5.6",
     "ngx-build-plus": "^9.0.2",
     "nodemon": "^2.0.2",
@@ -34,7 +52,8 @@
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.803.23",
+    "@angular-devkit/build-angular": "^0.803.23",
+    "@angular-devkit/build-ng-packagr": "^0.803.23",
     "@angular/cli": "~8.3.23",
     "@angular/compiler-cli": "~8.2.14",
     "@angular/language-service": "~8.2.14",
@@ -49,6 +68,7 @@
     "karma-coverage-istanbul-reporter": "~2.0.1",
     "karma-jasmine": "~2.0.1",
     "karma-jasmine-html-reporter": "^1.4.0",
+    "ng-packagr": "^5.7.1",
     "protractor": "~5.4.0",
     "ts-node": "~7.0.0",
     "tslint": "~5.15.0",

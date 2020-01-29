@@ -1,41 +1,38 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, Injector, DoBootstrap } from '@angular/core';
-import { createCustomElement } from '@angular/elements';
+import { NgModule, SkipSelf, Injector, InjectFlags, Inject, InjectionToken } from '@angular/core';
+import { StoreModule, Store } from '@ngrx/store';
 
 import { SubAppComponent } from './app.component';
-import { StoreModule } from '@ngrx/store';
-import { reducers, metaReducers } from './reducers';
+import { getSubAppReducer, AppState } from 'src/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { environment } from '../environments/environment';
+export class ShellStore extends Store<any> {
 
+}
 @NgModule({
   declarations: [
     SubAppComponent
   ],
   imports: [
     BrowserModule,
-/*     StoreModule.forRoot(reducers, {
-      metaReducers,
-      runtimeChecks: {
-        strictStateImmutability: true,
-        strictActionImmutability: true
-      }
-    }), */
+    StoreModule.forRoot({
+      count: getSubAppReducer
+    }),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production, name: 'sub-app-devtools' })
   ],
-  providers: [],
-  entryComponents: [SubAppComponent]
-})
-export class SubAppModule implements DoBootstrap {
-  constructor(
-    private _injector: Injector,
-  ) {
-    console.log('init sub AppModule')
-  }
-
-  ngDoBootstrap() {
-    console.log('butstrap sub AppModule')
-    if (!customElements.get('sub-app')) {
-      const element = createCustomElement(SubAppComponent, { injector: this._injector });
-      customElements.define('sub-app', element);
+  entryComponents: [SubAppComponent],
+  providers: [
+    {
+      provide: ShellStore,
+      useExisting: 'parentStore'
     }
-  }
+  ],
+  bootstrap: [SubAppComponent]
+})
+export class SubAppModule {
+  static entry = SubAppComponent;
 }
 
+export const manifest = {
+  lol: 'lol'
+}
