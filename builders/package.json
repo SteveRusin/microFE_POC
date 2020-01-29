@@ -1,0 +1,16 @@
+{
+  "builders": "builders.json",
+  "devDependencies": {
+    "@angular-devkit/architect": "^0.803.23",
+    "@angular-devkit/build-angular": "^0.803.23",
+    "@angular-devkit/core": "^8.3.23",
+    "@angular/compiler": "^8.2.14",
+    "@angular/compiler-cli": "^8.2.14",
+    "@angular/core": "^8.2.14",
+    "fs": "0.0.1-security",
+    "webpack": "^4.41.5"
+  },
+  "dependencies": {
+    "rxjs": "^6.5.4"
+  }
+}

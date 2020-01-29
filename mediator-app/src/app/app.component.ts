@@ -1,15 +1,12 @@
-import { Component, OnInit, Compiler } from '@angular/core';
-import * as AngularCore from '@angular/core';
+import { Component, OnInit, NgModuleFactory, Injector, ViewChild, ViewContainerRef } from '@angular/core';
+import { PLUGIN_EXTERNALS_MAP } from './externals';
 
-System.set("@angular/core", System.newModule(AngularCore))
-export interface System {
-  import: (...args: any) => any;
-  get: (id: any) => any;
-  set: (id: any, module: any) => any;
-  [key: string]: any;
-}
+import { Store } from '@ngrx/store';
+import { AppState, getShellAppState, click } from 'src/store';
 
-declare var System: System;
+const SystemJs = window.System;
+
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -17,45 +14,46 @@ declare var System: System;
 })
 export class AppComponent implements OnInit {
   title = 'mediator-app';
+  @ViewChild('targetRef', { read: ViewContainerRef, static: true })
+  containerRef: ViewContainerRef;
+  shellState$ = this.store.select(getShellAppState)
 
   constructor(
-    private compiler: Compiler,
+    private injector: Injector,
+    private store: Store<AppState>,
   ) { }
 
-  ngOnInit() {
-    const body = document.querySelector('body');
-    const scriptsUrls = [
-      'https://cdnjs.cloudflare.com/ajax/libs/zone.js/0.9.1/zone.min.js',
-      'https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.2.10/custom-elements-es5-adapter.js',
-      // 'http://localhost:8081/sub-vendor.js',
-      // 'http://localhost:8081/sub-main.js',
-    ];
-
-    scriptsUrls.forEach(url => {
-      const script = document.createElement('script');
-      script.src = url;
-
-      body.appendChild(script);
-    })
-
-    this.load();
+  updateShellState() {
+    this.store.dispatch(click());
   }
 
-  load() {
-    // System.map['subApp'] = "http://localhost:8081/sub-main.js";
-    System.import('http://localhost:8081/sub-app.umd.js')
-      .then(module => {
-      console.log('TCL: AppComponent -> load -> module', module)
-       // this.compiler.compileModuleSync(module)
-      })
+  ngOnInit() {
+    this.provideExternals();
+    this.load().then(moduleFactory => {
+      const moduleRef = moduleFactory.create(this.injector);
+      const entryComponent = (moduleFactory.moduleType as any).entry;
+      const compFactory = moduleRef.componentFactoryResolver.resolveComponentFactory(entryComponent);
+      this.containerRef.createComponent(compFactory);
+    });
 
+  }
+
+  load<T = any>(): Promise<NgModuleFactory<T>> {
+    const pluginPath = 'http://localhost:8081/sub-app.js';
+    return SystemJs.import(pluginPath).then(
+      module => {
+        debugger;
+        return module.default.default;
+      }
+    );
+  }
+
+  provideExternals() {
+    Object.keys(PLUGIN_EXTERNALS_MAP).forEach(externalKey => {
+      window.define(externalKey, [], () => {
+        return PLUGIN_EXTERNALS_MAP[externalKey];
+      })
+    }
+    );
   }
 }
-
-
-/*     <script src="https://cdnjs.cloudflare.com/ajax/libs/zone.js/0.9.1/zone.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/webcomponentsjs/2.2.10/custom-elements-es5-adapter.js"></script>
-    <script type="text/javascript"
-            src="http://localhost:8081/main-es2015.js"></script>
-    <script type="text/javascript"
-            src="http://localhost:8082/main-es2015.js"></script> */
