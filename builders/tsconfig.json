@@ -1,10 +1,9 @@
 {
-  "extends": "../tsconfig.json",
   "compilerOptions": {
     "module": "commonjs",
     "outDir": "./plugin-builder",
     "importHelpers": false,
-    "sourceMap": false,
+    "sourceMap": true,
     "target": "es6"
   },
   "files": [

@@ -44,6 +44,9 @@ function patchWebpackConfig(config, options) {
         '@angular/common': 'ng.common',
         '@angular/forms': 'ng.forms',
         '@angular/router': 'ng.router',
+        '@angular/router': 'ng.router',
+        '@ngrx/store': 'ngrx.store',
+        '@ngrx/store-devtools': 'ngrx.devTools',
         tslib: 'tslib'
         // put here other common dependencies
     };
@@ -69,6 +72,7 @@ function patchWebpackConfig(config, options) {
     // so that we can clear use it within `run` method to clear that file
     entryPointPath = config.entry.main[0];
     const [modulePath, moduleName] = options.modulePath.split('#');
+    debugger;
     const factoryPath = `${modulePath.includes('.') ? modulePath : `${modulePath}/${modulePath}`}.ngfactory`;
     const entryPointContents = `
        export * from '${modulePath}';
@@ -84,3 +88,4 @@ function patchWebpackConfig(config, options) {
     config.output.globalObject = `(typeof self !== 'undefined' ? self : this)`;
 }
 exports.default = architect_1.createBuilder(buildPlugin);
+//# sourceMappingURL=index.js.map

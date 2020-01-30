@@ -1,5 +1,8 @@
 {
   "builders": "builders.json",
+  "scripts": {
+    "start": "tsc -w"
+  },
   "devDependencies": {
     "@angular-devkit/architect": "^0.803.23",
     "@angular-devkit/build-angular": "^0.803.23",
@@ -11,6 +14,8 @@
     "webpack": "^4.41.5"
   },
   "dependencies": {
-    "rxjs": "^6.5.4"
+    "nodemon": "^2.0.2",
+    "rxjs": "^6.5.4",
+    "rxjs-compat": "^6.5.4"
   }
 }
