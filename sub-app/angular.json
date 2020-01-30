@@ -47,7 +47,7 @@
               "aot": true,
               "extractLicenses": true,
               "vendorChunk": false,
-              "buildOptimizer": true,
+              "buildOptimizer": false,
               "budgets": [
                 {
                   "type": "initial",
@@ -135,8 +135,10 @@
           "builder": "../builders:plugin",
           "options": {
             "outputPath": "dist/plugins",
+            "pluginName":"sub-app",
+            "modulePath": "./app/app.module#SubAppModule",
             "index": "",
-            "main": "src/main.ts",
+            "main": "src/plugin.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "./tsconfig.app.json",
             "assets": [],

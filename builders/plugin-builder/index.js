@@ -14,6 +14,7 @@ function buildPlugin(options, context, transforms = {}) {
         return originalWebpackConfigurationFn ? originalWebpackConfigurationFn(config) : config;
     };
     const result = build_angular_1.executeBrowserBuilder(options, context, transforms);
+    // @ts-ignore
     return result.pipe(operators_1.tap(() => {
         patchEntryPoint('');
     }));
@@ -43,7 +44,6 @@ function patchWebpackConfig(config, options) {
         '@angular/core': 'ng.core',
         '@angular/common': 'ng.common',
         '@angular/forms': 'ng.forms',
-        '@angular/router': 'ng.router',
         '@angular/router': 'ng.router',
         '@ngrx/store': 'ngrx.store',
         '@ngrx/store-devtools': 'ngrx.devTools',

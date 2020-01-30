@@ -12,8 +12,8 @@
     "watch": "nodemon --watch . -e ts,html,scss --exec \"npm run build:plugin\"",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "debug": "nodemon --inspect-brk ./bin/ng build plugins --prod --modulePath=./app/app.module#SubAppModule --pluginName=sub-app --outputPath=./dist/bundles",
-    "build:plugin": "ng build plugins --prod --modulePath=./app/app.module#SubAppModule --pluginName=sub-app --outputPath=./dist/bundles",
+    "debug": "node --inspect-brk ./node_modules/@angular/cli/bin/ng build plugins --prod",
+    "build:plugin": "ng build plugins --prod ",
     "build:externals": "ng build --extra-webpack-config webpack.externals.js --prod --single-bundle",
     "build:sub-app:externals": "ng build --extra-webpack-config webpack.externals.js --prod --project sub-app --single-bundle"
   },

@@ -44,6 +44,7 @@ function buildPlugin(options: Options,
 
   const result = executeBrowserBuilder(options as any, context, transforms);
 
+  // @ts-ignore
   return result.pipe(tap(() => {
     patchEntryPoint('');
   }));
@@ -80,7 +81,6 @@ function patchWebpackConfig(config: webpack.Configuration, options: Options) {
     '@angular/core': 'ng.core',
     '@angular/common': 'ng.common',
     '@angular/forms': 'ng.forms',
-    '@angular/router': 'ng.router',
     '@angular/router': 'ng.router',
     '@ngrx/store': 'ngrx.store',
     '@ngrx/store-devtools': 'ngrx.devTools',
