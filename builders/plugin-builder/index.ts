@@ -5,9 +5,10 @@ import * as fs from 'fs';
 import * as webpack from 'webpack';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { Schema } from '@angular-devkit/build-angular/src/browser/schema';
 
 
-interface Options extends JsonObject {
+interface Options extends Schema {
   /**
    * A string of the form `path/to/file#exportName` that acts as a path to include to bundle
    */
@@ -22,6 +23,7 @@ interface Options extends JsonObject {
    * A comma-delimited list of shared lib names used by current plugin
    */
   sharedLibs: string;
+  [key: string]: any;
 }
 
 let entryPointPath;
@@ -42,7 +44,7 @@ function buildPlugin(options: Options,
     return originalWebpackConfigurationFn ? originalWebpackConfigurationFn(config) : config;
   };
 
-  const result = executeBrowserBuilder(options as any, context, transforms);
+  const result = executeBrowserBuilder(options, context, transforms);
 
   // @ts-ignore
   return result.pipe(tap(() => {
