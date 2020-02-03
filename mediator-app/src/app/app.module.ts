@@ -13,16 +13,10 @@ import { getShellAppReducer } from 'src/store';
   ],
   imports: [
     BrowserModule,
-    StoreModule.forRoot({
+/*     StoreModule.forRoot({
       shellApp: getShellAppReducer
     }),
-    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production, name: 'micro-app-devtools' })
-  ],
-  providers: [
-    {
-      provide: 'parentStore',
-      useExisting: Store
-    }
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production, name: 'micro-app-devtools' }) */
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

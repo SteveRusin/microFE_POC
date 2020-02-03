@@ -1,13 +1,44 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>SubApp</title>
-  <base href="/">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-</head>
-<body>
-  <app-root></app-root>
-</body>
+
+  <head>
+    <meta charset="utf-8">
+    <title>SubApp</title>
+    <base href="/">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
+    <link rel="icon"
+          type="image/x-icon"
+          href="favicon.ico">
+<!--     <script type="text/javascript">
+      let cachedProxy;
+      const traps = {
+        get(obj, prop) {
+          if (prop === 'push') {
+            const originalPush = obj[prop];
+            return (data) => {
+              var chunkIds = data[0];
+              var moreModules = data[1];
+              var executeModules = data[2];
+              return originalPush(data)
+            }
+          }
+          return obj[prop];
+        }
+      }
+      Object.defineProperty(window, 'webpackJsonp', {
+        set(data) {
+          cachedProxy = new Proxy(data, traps);
+        },
+        get() {
+          return cachedProxy;
+        }
+      })
+    </script> -->
+  </head>
+
+  <body>
+    <app-root></app-root>
+  </body>
+
 </html>

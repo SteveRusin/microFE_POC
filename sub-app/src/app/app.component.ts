@@ -1,27 +1,24 @@
-import { Component, SkipSelf } from '@angular/core';
+import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 
 import { decrement, increment, AppState, getCount } from 'src/store';
-import { ShellStore } from './app.module';
 @Component({
-  selector: 'app-root-1',
+  selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
 export class SubAppComponent {
-  count$ = this.store.select(getCount);
-  shellState$ = this.shellStore;
+//  count$ = this.store.select(getCount);
 
   constructor(
-    private store: Store<AppState>,
-    private shellStore: ShellStore,
+//    private store: Store<AppState>,
   ) {}
 
   add() {
-    this.store.dispatch(increment());
+   // this.store.dispatch(increment());
   }
 
   subtract() {
-    this.store.dispatch(decrement());
+  //  this.store.dispatch(decrement());
   }
 }

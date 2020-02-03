@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "outDir": "./plugin-server",
+    "importHelpers": false,
+    "sourceMap": true,
+    "target": "es6"
+  },
+  "files": [
+    "./plugin-server/index.ts"
+  ]
+}

@@ -4,6 +4,11 @@
       "implementation": "./plugin-builder",
       "schema": "./plugin-builder/schema.json",
       "description": "Plugin Builder"
+    },
+    "dev-server": {
+      "implementation": "./plugin-server",
+      "schema": "./plugin-server/schema.json",
+      "description": "Plugin Server"
     }
   }
 }

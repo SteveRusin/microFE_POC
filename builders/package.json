@@ -1,7 +1,8 @@
 {
   "builders": "builders.json",
   "scripts": {
-    "start": "tsc -w"
+    "start": "tsc -w -p tsconfig.builder.json",
+    "start:s": "tsc -w -p tsconfig.server.json"
   },
   "devDependencies": {
     "@angular-devkit/architect": "^0.803.23",
@@ -10,12 +11,15 @@
     "@angular/compiler": "^8.2.14",
     "@angular/compiler-cli": "^8.2.14",
     "@angular/core": "^8.2.14",
+    "enhanced-resolve": "^4.1.1",
     "fs": "0.0.1-security",
-    "webpack": "^4.41.5"
+    "webpack": "^4.41.5",
+    "webpack-merge": "^4.2.2"
   },
   "dependencies": {
     "nodemon": "^2.0.2",
     "rxjs": "^6.5.4",
-    "rxjs-compat": "^6.5.4"
+    "rxjs-compat": "^6.5.4",
+    "webpack-system-register": "^1.6.0"
   }
 }

@@ -4,14 +4,16 @@ const build_angular_1 = require("@angular-devkit/build-angular");
 const architect_1 = require("@angular-devkit/architect");
 const fs = require("fs");
 const operators_1 = require("rxjs/operators");
+const webpackMerge = require("webpack-merge");
 let entryPointPath;
 function buildPlugin(options, context, transforms = {}) {
     options.deleteOutputPath = false;
     validateOptions(options);
     const originalWebpackConfigurationFn = transforms.webpackConfiguration;
     transforms.webpackConfiguration = (config) => {
-        patchWebpackConfig(config, options);
-        return originalWebpackConfigurationFn ? originalWebpackConfigurationFn(config) : config;
+        const conf = patchWebpackConfig(config, options);
+        const mergedConf = conf ? webpackMerge([config, conf]) : config;
+        return originalWebpackConfigurationFn ? originalWebpackConfigurationFn(mergedConf) : mergedConf;
     };
     const result = build_angular_1.executeBrowserBuilder(options, context, transforms);
     // @ts-ignore
@@ -39,17 +41,6 @@ function patchWebpackConfig(config, options) {
     delete config.optimization.runtimeChunk;
     delete config.optimization.splitChunks;
     delete config.entry.styles;
-    config.externals = {
-        rxjs: 'rxjs',
-        '@angular/core': 'ng.core',
-        '@angular/common': 'ng.common',
-        '@angular/forms': 'ng.forms',
-        '@angular/router': 'ng.router',
-        '@ngrx/store': 'ngrx.store',
-        '@ngrx/store-devtools': 'ngrx.devTools',
-        tslib: 'tslib'
-        // put here other common dependencies
-    };
     if (sharedLibs) {
         config.externals = [config.externals];
         const sharedLibsArr = sharedLibs.split(',');
@@ -64,15 +55,10 @@ function patchWebpackConfig(config, options) {
             });
         });
     }
-    const ngCompilerPluginInstance = config.plugins.find(x => x.constructor && x.constructor.name === 'AngularCompilerPlugin');
-    if (ngCompilerPluginInstance) {
-        ngCompilerPluginInstance._entryModule = options.modulePath;
-    }
     // preserve path to entry point
     // so that we can clear use it within `run` method to clear that file
     entryPointPath = config.entry.main[0];
     const [modulePath, moduleName] = options.modulePath.split('#');
-    debugger;
     const factoryPath = `${modulePath.includes('.') ? modulePath : `${modulePath}/${modulePath}`}.ngfactory`;
     const entryPointContents = `
        export * from '${modulePath}';
@@ -81,11 +67,27 @@ function patchWebpackConfig(config, options) {
        export default ${moduleName}NgFactory;
     `;
     patchEntryPoint(entryPointContents);
-    config.output.filename = `${pluginName}.js`;
-    config.output.library = pluginName;
-    config.output.libraryTarget = 'umd';
-    // workaround to support bundle on nodejs
-    config.output.globalObject = `(typeof self !== 'undefined' ? self : this)`;
+    return {
+        output: {
+            filename: `${pluginName}.js`,
+            library: pluginName,
+            libraryTarget: 'umd',
+            globalObject: `(typeof self !== 'undefined' ? self : this)`,
+        },
+        externals: {
+            rxjs: 'rxjs.8',
+            '@angular/core': '@angular/core.8',
+            '@angular/common': '@angular/common.8',
+            '@angular/forms': '@angular/forms.8',
+            '@angular/compiler': '@angular/compiler.8',
+            '@angular/router': '@angular/router.8',
+            '@angular/platform-browser-dynamic': '@angular/platform-browser-dynamic.8',
+            '@ngrx/store': 'ngrx.store',
+            '@ngrx/store-devtools': 'ngrx.devTools',
+            tslib: 'tslib'
+            // put here other common dependencies
+        }
+    };
 }
 exports.default = architect_1.createBuilder(buildPlugin);
 //# sourceMappingURL=index.js.map

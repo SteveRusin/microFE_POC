@@ -1,12 +1,11 @@
 import { BrowserBuilderOutput, executeBrowserBuilder, ExecutionTransformer } from '@angular-devkit/build-angular';
-import { JsonObject } from '@angular-devkit/core';
 import { createBuilder, BuilderContext } from '@angular-devkit/architect';
 import * as fs from 'fs';
 import * as webpack from 'webpack';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Schema } from '@angular-devkit/build-angular/src/browser/schema';
-
+import * as webpackMerge from 'webpack-merge';
 
 interface Options extends Schema {
   /**
@@ -31,17 +30,17 @@ let entryPointPath;
 function buildPlugin(options: Options,
   context: BuilderContext,
   transforms: {
-    webpackConfiguration?: ExecutionTransformer<webpack.Configuration>,
+    webpackConfiguration?: ExecutionTransformer<webpack.WebpackOptions>,
   } = {}): Observable<BrowserBuilderOutput> {
   options.deleteOutputPath = false;
-
   validateOptions(options);
 
   const originalWebpackConfigurationFn = transforms.webpackConfiguration;
-  transforms.webpackConfiguration = (config: webpack.Configuration) => {
-    patchWebpackConfig(config, options);
+  transforms.webpackConfiguration = (config: webpack.WebpackOptions) => {
+    const conf = patchWebpackConfig(config, options);
+    const mergedConf = conf ? webpackMerge([config, conf]) : config;
 
-    return originalWebpackConfigurationFn ? originalWebpackConfigurationFn(config) : config;
+    return originalWebpackConfigurationFn ? originalWebpackConfigurationFn(mergedConf) : mergedConf;
   };
 
   const result = executeBrowserBuilder(options, context, transforms);
@@ -68,7 +67,7 @@ function validateOptions(options: Options) {
   }
 }
 
-function patchWebpackConfig(config: webpack.Configuration, options: Options) {
+function patchWebpackConfig(config: webpack.WebpackOptions, options: Options): webpack.WebpackOptions {
   const { pluginName, sharedLibs } = options;
 
   // Make sure we are producing a single bundle
@@ -77,18 +76,6 @@ function patchWebpackConfig(config: webpack.Configuration, options: Options) {
   delete config.optimization.runtimeChunk;
   delete config.optimization.splitChunks;
   delete config.entry.styles;
-
-  config.externals = {
-    rxjs: 'rxjs',
-    '@angular/core': 'ng.core',
-    '@angular/common': 'ng.common',
-    '@angular/forms': 'ng.forms',
-    '@angular/router': 'ng.router',
-    '@ngrx/store': 'ngrx.store',
-    '@ngrx/store-devtools': 'ngrx.devTools',
-    tslib: 'tslib'
-    // put here other common dependencies
-  };
 
   if (sharedLibs) {
     config.externals = [config.externals];
@@ -105,19 +92,11 @@ function patchWebpackConfig(config: webpack.Configuration, options: Options) {
     });
   }
 
-  const ngCompilerPluginInstance = config.plugins.find(
-    x => x.constructor && x.constructor.name === 'AngularCompilerPlugin'
-  );
-  if (ngCompilerPluginInstance) {
-    ngCompilerPluginInstance._entryModule = options.modulePath;
-  }
-
   // preserve path to entry point
   // so that we can clear use it within `run` method to clear that file
   entryPointPath = config.entry.main[0];
 
   const [modulePath, moduleName] = options.modulePath.split('#');
-  debugger;
 
   const factoryPath = `${
     modulePath.includes('.') ? modulePath : `${modulePath}/${modulePath}`
@@ -130,11 +109,27 @@ function patchWebpackConfig(config: webpack.Configuration, options: Options) {
     `;
   patchEntryPoint(entryPointContents);
 
-  config.output.filename = `${pluginName}.js`;
-  config.output.library = pluginName;
-  config.output.libraryTarget = 'umd';
-  // workaround to support bundle on nodejs
-  config.output.globalObject = `(typeof self !== 'undefined' ? self : this)`;
+  return {
+    output: {
+      filename: `${pluginName}.js`,
+      library: pluginName,
+      libraryTarget: 'umd',
+      globalObject: `(typeof self !== 'undefined' ? self : this)`,
+    },
+    externals: {
+      rxjs: 'rxjs.8',
+      '@angular/core': '@angular/core.8',
+      '@angular/common': '@angular/common.8',
+      '@angular/forms': '@angular/forms.8',
+      '@angular/compiler': '@angular/compiler.8',
+      '@angular/router': '@angular/router.8',
+      '@angular/platform-browser-dynamic': '@angular/platform-browser-dynamic.8',
+      '@ngrx/store': 'ngrx.store',
+      '@ngrx/store-devtools': 'ngrx.devTools',
+      tslib: 'tslib'
+      // put here other common dependencies
+    }
+  }
 }
 
 export default createBuilder<Options>(buildPlugin);
